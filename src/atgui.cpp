@@ -43,7 +43,6 @@ namespace ImGui
 void UI::SetVisible(bool visible)
 {
 	UI::isVisible = visible;
-	cvar->FindVar("cl_mouseenable")->SetValue(!UI::isVisible);
 }
 
 void UI::SetupColors()
@@ -264,12 +263,36 @@ void ColorsWindow()
 void AimbotTab()
 {
 	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
+	int current_weapon = -1;
 
 	ImGui::Checkbox("Enabled", &Settings::Aimbot::enabled);
 	ImGui::Separator();
 
-	ImGui::Columns(2, NULL, true);
+	ImGui::Columns(3, NULL, true);
 	{
+		ImGui::SetColumnOffset(1, 150);
+		ImGui::ListBoxHeader("##GUNS", ImVec2(-1, -1));
+			for (auto it : guns)
+			{
+				const bool item_selected = (it.first == current_weapon);
+				ImGui::PushID(it.first);
+					if (ImGui::Selectable(it.second, item_selected))
+					{
+						current_weapon = it.first;
+
+						// auto keyExists = Settings::Skinchanger::skins.find(it.first);
+						// if (keyExists == Settings::Skinchanger::skins.end())
+						// 	current_weapon_skin = -1;
+						// else
+						// 	current_weapon_skin = Settings::Skinchanger::skins[it.first].PaintKit;
+					}
+				ImGui::PopID();
+			}
+		ImGui::ListBoxFooter();
+	}
+	ImGui::NextColumn();
+	{
+		ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 75);
 		ImGui::BeginChild("COL1", ImVec2(0, 0), true);
 		{
 			ImGui::Text("Target");
@@ -1288,7 +1311,7 @@ void SkinChangerWindow()
 	ImGui::SetNextWindowSize(ImVec2(640, 695), ImGuiSetCond_FirstUseEver);
 	if (ImGui::Begin("Skin Changer", &showSkinChangerWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
 	{
-		static int current_weapon = 7;
+		static int current_weapon = WEAPON_AK47;
 		static int current_weapon_skin = Settings::Skinchanger::skins[current_weapon].PaintKit;
 		static float weaponWear = 0.005f;
 		static int weaponSkinSeed = -1;
@@ -1315,6 +1338,8 @@ void SkinChangerWindow()
 				ImGui::ListBoxHeader("##GUNS", ImVec2(0, 300));
 					for (auto it : guns)
 					{
+						if (strcmp(it.second, "<-Default->") == 0)
+							continue;
 						if (!Util::Contains(Util::ToLower(std::string(filterGuns)), Util::ToLower(std::string(it.second))))
 							continue;
 						const bool item_selected = (it.first == current_weapon);
