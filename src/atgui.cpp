@@ -263,7 +263,7 @@ void ColorsWindow()
 void AimbotTab()
 {
 	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
-	int current_weapon = -1;
+	static int current_weapon = -1;
 
 	ImGui::Checkbox("Enabled", &Settings::Aimbot::enabled);
 	ImGui::Separator();
