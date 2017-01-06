@@ -240,8 +240,8 @@ namespace Settings
 			bool enabled, silent, friendly;
 			int bone;
 			ButtonCode_t aimkey;
-			bool aimkey_only, smoothEnabled, smoothValue, smoothSaltEnabled, errorMarginEnabled, autoAimEnabled, autoWallEnabled, aimStepEnabled, rcsEnabled, rcsAlways_on;
-			float smoothSaltMultiplier, errorMarginValue, autoAimValue, autoWallValue, aimStepValue, rcsFloat;
+			bool aimkey_only, smoothEnabled, smoothAmount, smoothSaltEnabled, errorMarginEnabled, autoAimEnabled, autoWallEnabled, aimStepEnabled, rcsEnabled, rcsAlways_on;
+			float smoothSaltMultiplier, errorMarginValue, autoAimFov, autoWallValue, aimStepValue, rcsAmount;
 			bool autoPistolEnabled, autoShootEnabled, autoScopeEnabled, noShootEnabled, ignoreJumpEnabled;
 
 			Weapon (int currentWeapon, bool enabled, bool silent, bool friendly, int bone, ButtonCode_t aimkey, bool aimkey_only,
@@ -260,20 +260,20 @@ namespace Settings
 				this->aimkey = aimkey;
 				this->aimkey_only = aimkey_only;
 				this->smoothEnabled = smoothEnabled;
-				this->smoothValue = smoothValue;
+				this->smoothAmount = smoothValue;
 				this->smoothSaltEnabled = smoothSaltEnabled;
 				this->smoothSaltMultiplier = smoothSaltMultiplier;
 				this->errorMarginEnabled = errorMarginEnabled;
 				this->errorMarginValue = errorMarginValue;
 				this->autoAimEnabled = autoAimEnabled;
-				this->autoAimValue = autoAimValue;
+				this->autoAimFov = autoAimValue;
 				this->autoWallEnabled = autoWallEnabled;
 				this->autoWallValue = autoWallValue;
 				this->aimStepEnabled = aimStepEnabled;
 				this->aimStepValue = aimStepValue;
 				this->rcsEnabled = rcsEnabled;
 				this->rcsAlways_on = rcsAlways_on;
-				this->rcsFloat = rcsFloat;
+				this->rcsAmount = rcsFloat;
 				this->autoPistolEnabled = autoPistolEnabled;
 				this->autoShootEnabled = autoShootEnabled;
 				this->autoScopeEnabled = autoScopeEnabled;
