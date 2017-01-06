@@ -9,7 +9,7 @@ static std::vector<std::pair<int, const char*>> guns = {
 		{ WEAPON_DEAGLE,				"Deagle" },
 		{ WEAPON_ELITE,					"Dual Berettas" },
 		{ WEAPON_FAMAS,					"Famas" },
-		{ WEAPON_FIVESEVEN, 		"Five-SeveN" },
+		{ WEAPON_FIVESEVEN,			"Five-SeveN" },
 		{ WEAPON_GALILAR,				"Galil AR" },
 		{ WEAPON_G3SG1,					"G3SG1" },
 		{ WEAPON_GLOCK,					"Glock" },
