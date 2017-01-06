@@ -52,7 +52,7 @@ std::unordered_map<int, std::vector<const char*>> hitboxes = {
 
 std::unordered_map<int, Settings::Aimbot::Weapon> Settings::Aimbot::weapons = {
 		{ WEAPON_AK47, Settings::Aimbot::Weapon(7, true, true, true, 8, ButtonCode_t::KEY_H, false, true, 0.4f, true, 0.5f, true, 0.7f, true, 50.0f, false, 0.0f, false, 10.0f, true, false, 1.3f, false, true, false, false, false) },
-		{ WEAPON_AWP, Settings::Aimbot::Weapon(9, false, false, false, 6, ButtonCode_t::MOUSE_MIDDLE, false, false, 0.0f, false, 0.0f, false, 0.0f, true, 180.0f, false, 0.0f, false, 10.0f, true, false, 2.0f, false, false, true, false, false) },
+		{ WEAPON_AWP, Settings::Aimbot::Weapon(9, true, false, false, 6, ButtonCode_t::MOUSE_MIDDLE, false, false, 0.0f, false, 0.0f, false, 0.0f, true, 180.0f, false, 0.0f, false, 10.0f, true, false, 2.0f, false, false, true, false, false) },
 };
 
 static void ApplyErrorToAngle(QAngle* angles, float margin)
@@ -496,6 +496,9 @@ void Aimbot::NoShoot(C_BaseCombatWeapon* active_weapon, C_BasePlayer* player, CU
 
 void Aimbot::CreateMove(CUserCmd* cmd)
 {
+
+	Aimbot::UpdateValues();
+
 	if (!Settings::Aimbot::enabled)
 		return;
 
@@ -571,5 +574,53 @@ void Aimbot::FireEventClientSide(IGameEvent* event)
 			return;
 
 		Aimbot::Friends.clear();
+	}
+}
+
+void Aimbot::UpdateValues()
+{
+
+	C_BasePlayer* localplayer = (C_BasePlayer*)entitylist->GetClientEntity(engine->GetLocalPlayer());
+	if (!localplayer || !localplayer->GetAlive())
+		return;
+
+	C_BaseCombatWeapon* active_weapon = (C_BaseCombatWeapon*)entitylist->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	if (!active_weapon)
+		return;
+
+	auto keyExists = Settings::Aimbot::weapons.find(*active_weapon->GetItemDefinitionIndex());
+	if (keyExists == Settings::Aimbot::weapons.end())
+		return;
+
+	Settings::Aimbot::Weapon currentWeaponSetting = Settings::Aimbot::weapons[*active_weapon->GetItemDefinitionIndex()];
+
+	if (currentWeaponSetting.currentWeapon != -1)
+	{
+		Settings::Aimbot::enabled = currentWeaponSetting.enabled;
+		Settings::Aimbot::silent = currentWeaponSetting.silent;
+		Settings::Aimbot::friendly = currentWeaponSetting.friendly;
+		Settings::Aimbot::bone = currentWeaponSetting.bone;
+		Settings::Aimbot::aimkey = currentWeaponSetting.aimkey;
+		Settings::Aimbot::aimkey_only = currentWeaponSetting.aimkey_only;
+		Settings::Aimbot::Smooth::enabled = currentWeaponSetting.smoothEnabled;
+		Settings::Aimbot::Smooth::value = currentWeaponSetting.smoothValue;
+		Settings::Aimbot::ErrorMargin::enabled = currentWeaponSetting.errorMarginEnabled;
+		Settings::Aimbot::ErrorMargin::value = currentWeaponSetting.errorMarginValue;
+		Settings::Aimbot::AutoAim::enabled = currentWeaponSetting.autoAimEnabled;
+		Settings::Aimbot::AutoAim::fov = currentWeaponSetting.autoAimValue;
+		Settings::Aimbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
+		Settings::Aimbot::AutoWall::value = currentWeaponSetting.autoWallValue;
+		Settings::Aimbot::AimStep::enabled = currentWeaponSetting.aimStepEnabled;
+		Settings::Aimbot::AimStep::value = currentWeaponSetting.aimStepValue;
+		Settings::Aimbot::AutoPistol::enabled = currentWeaponSetting.autoPistolEnabled;
+		Settings::Aimbot::AutoShoot::enabled = currentWeaponSetting.autoShootEnabled;
+		Settings::Aimbot::AutoShoot::autoscope = currentWeaponSetting.autoScopeEnabled;
+		Settings::Aimbot::RCS::enabled = currentWeaponSetting.rcsEnabled;
+		Settings::Aimbot::RCS::always_on = currentWeaponSetting.rcsAlways_on;
+		Settings::Aimbot::RCS::value = currentWeaponSetting.rcsFloat;
+		Settings::Aimbot::NoShoot::enabled = currentWeaponSetting.noShootEnabled;
+		Settings::Aimbot::IgnoreJump::enabled = currentWeaponSetting.ignoreJumpEnabled;
+		Settings::Aimbot::Smooth::Salting::enabled = currentWeaponSetting.smoothSaltEnabled;
+		Settings::Aimbot::Smooth::Salting::multiplier = currentWeaponSetting.smoothSaltMultiplier;
 	}
 }

@@ -237,32 +237,12 @@ namespace Settings
 		struct Weapon
 		{
 			int currentWeapon;
-			bool enabled;
-			bool silent;
-			bool friendly;
+			bool enabled, silent, friendly;
 			int bone;
 			ButtonCode_t aimkey;
-			bool aimkey_only;
-			bool smoothEnabled;
-			bool smoothValue;
-			bool smoothSaltEnabled;
-			float smoothSaltMultiplier;
-			bool errorMarginEnabled;
-			float errorMarginValue;
-			bool autoAimEnabled;
-			float autoAimValue;
-			bool autoWallEnabled;
-			float autoWallValue;
-			bool aimStepEnabled;
-			float aimStepValue;
-			bool rcsEnabled;
-			bool rcsAlways_on;
-			float rcsFloat;
-			bool autoPistolEnabled;
-			bool autoShootEnabled;
-			bool autoScopeEnabled;
-			bool noShootEnabled;
-			bool ignoreJumpEnabled;
+			bool aimkey_only, smoothEnabled, smoothValue, smoothSaltEnabled, errorMarginEnabled, autoAimEnabled, autoWallEnabled, aimStepEnabled, rcsEnabled, rcsAlways_on;
+			float smoothSaltMultiplier, errorMarginValue, autoAimValue, autoWallValue, aimStepValue, rcsFloat;
+			bool autoPistolEnabled, autoShootEnabled, autoScopeEnabled, noShootEnabled, ignoreJumpEnabled;
 
 			Weapon (int currentWeapon, bool enabled, bool silent, bool friendly, int bone, ButtonCode_t aimkey, bool aimkey_only,
 							bool smoothEnabled, float smoothValue, bool smoothSaltEnabled, float smoothSaltMultiplier,
