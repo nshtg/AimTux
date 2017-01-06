@@ -263,33 +263,34 @@ void ColorsWindow()
 void AimbotTab()
 {
 	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
-	static int current_weapon = -1;
-	static bool enabled = true;
-	static bool silent = false;
-	static bool friendly = false;
-	static int bone = BONE_HEAD;
-	static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
-	static bool aimkey_only = false;
-	static bool smoothEnabled = false;
-	static float smoothValue = 1.0f;
-	static bool smoothSaltEnabled = false;
-	static float smoothSaltMultiplier = 0.0f;
-	static bool errorMarginEnabled = false;
-	static float errorMarginValue = 0.0f;
-	static bool autoAimEnabled = false;
-	static float autoAimValue = 180.0f;
-	static bool aimStepEnabled = false;
-	static float aimStepValue = 25.0f;
-	static bool rcsEnabled = false;
-	static bool rcsAlways_on = false;
-	static float rcsFloat = 2.0f;
-	static bool autoPistolEnabled = false;
-	static bool autoShootEnabled = false;
-	static bool autoScopeEnabled = false;
-	static bool noShootEnabled = false;
-	static bool ignoreJumpEnabled = false;
+	static int current_weapon = WEAPON_AK47;
+	static bool enabled = Settings::Aimbot::weapons[current_weapon].enabled;
+	static bool silent = Settings::Aimbot::weapons[current_weapon].silent;
+	static bool friendly = Settings::Aimbot::weapons[current_weapon].friendly;
+	static int bone = Settings::Aimbot::weapons[current_weapon].bone;
+	static ButtonCode_t aimkey = Settings::Aimbot::weapons[current_weapon].aimkey;
+	static bool aimkey_only = Settings::Aimbot::weapons[current_weapon].aimkey_only;
+	static bool smoothEnabled = Settings::Aimbot::weapons[current_weapon].smoothEnabled;
+	static float smoothValue = Settings::Aimbot::weapons[current_weapon].smoothAmount;
+	static bool smoothSaltEnabled = Settings::Aimbot::weapons[current_weapon].smoothSaltEnabled;
+	static float smoothSaltMultiplier = Settings::Aimbot::weapons[current_weapon].smoothSaltMultiplier;
+	static bool errorMarginEnabled = Settings::Aimbot::weapons[current_weapon].errorMarginEnabled;
+	static float errorMarginValue = Settings::Aimbot::weapons[current_weapon].errorMarginValue;
+	static bool autoAimEnabled = Settings::Aimbot::weapons[current_weapon].autoAimEnabled;
+	static float autoAimValue = Settings::Aimbot::weapons[current_weapon].autoAimFov;
+	static bool aimStepEnabled = Settings::Aimbot::weapons[current_weapon].aimStepEnabled;
+	static float aimStepValue = Settings::Aimbot::weapons[current_weapon].aimStepValue;
+	static bool rcsEnabled = Settings::Aimbot::weapons[current_weapon].rcsEnabled;
+	static bool rcsAlways_on = Settings::Aimbot::weapons[current_weapon].rcsAlways_on;
+	static float rcsFloat = Settings::Aimbot::weapons[current_weapon].rcsAmount;
+	static bool autoPistolEnabled = Settings::Aimbot::weapons[current_weapon].autoPistolEnabled;
+	static bool autoShootEnabled = Settings::Aimbot::weapons[current_weapon].autoShootEnabled;
+	static bool autoScopeEnabled = Settings::Aimbot::weapons[current_weapon].autoScopeEnabled;
+	static bool noShootEnabled = Settings::Aimbot::weapons[current_weapon].noShootEnabled;
+	static bool ignoreJumpEnabled = Settings::Aimbot::weapons[current_weapon].ignoreJumpEnabled;
 
 	ImGui::Checkbox("Enabled", &enabled);
+//		Settings::Aimbot::weapons[-1] = Settings::Aimbot::Weapon(enabled, silent, friendly, bone, aimkey, aimkey_only, smoothEnabled, smoothValue, smoothSaltEnabled, smoothSaltMultiplier, errorMarginEnabled, errorMarginValue, autoAimEnabled, autoAimValue, aimStepEnabled, aimStepValue, rcsEnabled, rcsAlways_on, rcsFloat, autoPistolEnabled, autoShootEnabled, autoScopeEnabled, noShootEnabled, ignoreJumpEnabled);
 	ImGui::Separator();
 
 	ImGui::Columns(3, NULL, true);
@@ -331,33 +332,33 @@ void AimbotTab()
 							noShootEnabled = Settings::Aimbot::weapons[it.first].noShootEnabled;
 							ignoreJumpEnabled = Settings::Aimbot::weapons[it.first].ignoreJumpEnabled;
 						}
-						else
-						{
-							enabled = Settings::Aimbot::weapons[-1].enabled;
-							silent = Settings::Aimbot::weapons[-1].silent;
-							friendly = Settings::Aimbot::weapons[-1].friendly;
-							bone = Settings::Aimbot::weapons[-1].bone;
-							aimkey = Settings::Aimbot::weapons[-1].aimkey;
-							aimkey_only = Settings::Aimbot::weapons[-1].aimkey_only;
-							smoothEnabled = Settings::Aimbot::weapons[-1].smoothEnabled;
-							smoothValue = Settings::Aimbot::weapons[-1].smoothAmount;
-							smoothSaltEnabled = Settings::Aimbot::weapons[-1].smoothSaltEnabled;
-							smoothSaltMultiplier = Settings::Aimbot::weapons[-1].smoothSaltMultiplier;
-							errorMarginEnabled = Settings::Aimbot::weapons[-1].errorMarginEnabled;
-							errorMarginValue = Settings::Aimbot::weapons[-1].errorMarginValue;
-							autoAimEnabled = Settings::Aimbot::weapons[-1].autoAimEnabled;
-							autoAimValue = Settings::Aimbot::weapons[-1].autoAimFov;
-							aimStepEnabled = Settings::Aimbot::weapons[-1].aimStepEnabled;
-							aimStepValue = Settings::Aimbot::weapons[-1].aimStepValue;
-							rcsEnabled = Settings::Aimbot::weapons[-1].rcsEnabled;
-							rcsAlways_on = Settings::Aimbot::weapons[-1].rcsAlways_on;
-							rcsFloat = Settings::Aimbot::weapons[-1].rcsAmount;
-							autoPistolEnabled = Settings::Aimbot::weapons[-1].autoPistolEnabled;
-							autoShootEnabled = Settings::Aimbot::weapons[-1].autoShootEnabled;
-							autoScopeEnabled = Settings::Aimbot::weapons[-1].autoScopeEnabled;
-							noShootEnabled = Settings::Aimbot::weapons[-1].noShootEnabled;
-							ignoreJumpEnabled = Settings::Aimbot::weapons[-1].ignoreJumpEnabled;
-						}
+						// else
+						// {
+						// 	enabled = Settings::Aimbot::weapons[-1].enabled;
+						// 	silent = Settings::Aimbot::weapons[-1].silent;
+						// 	friendly = Settings::Aimbot::weapons[-1].friendly;
+						// 	bone = Settings::Aimbot::weapons[-1].bone;
+						// 	aimkey = Settings::Aimbot::weapons[-1].aimkey;
+						// 	aimkey_only = Settings::Aimbot::weapons[-1].aimkey_only;
+						// 	smoothEnabled = Settings::Aimbot::weapons[-1].smoothEnabled;
+						// 	smoothValue = Settings::Aimbot::weapons[-1].smoothAmount;
+						// 	smoothSaltEnabled = Settings::Aimbot::weapons[-1].smoothSaltEnabled;
+						// 	smoothSaltMultiplier = Settings::Aimbot::weapons[-1].smoothSaltMultiplier;
+						// 	errorMarginEnabled = Settings::Aimbot::weapons[-1].errorMarginEnabled;
+						// 	errorMarginValue = Settings::Aimbot::weapons[-1].errorMarginValue;
+						// 	autoAimEnabled = Settings::Aimbot::weapons[-1].autoAimEnabled;
+						// 	autoAimValue = Settings::Aimbot::weapons[-1].autoAimFov;
+						// 	aimStepEnabled = Settings::Aimbot::weapons[-1].aimStepEnabled;
+						// 	aimStepValue = Settings::Aimbot::weapons[-1].aimStepValue;
+						// 	rcsEnabled = Settings::Aimbot::weapons[-1].rcsEnabled;
+						// 	rcsAlways_on = Settings::Aimbot::weapons[-1].rcsAlways_on;
+						// 	rcsFloat = Settings::Aimbot::weapons[-1].rcsAmount;
+						// 	autoPistolEnabled = Settings::Aimbot::weapons[-1].autoPistolEnabled;
+						// 	autoShootEnabled = Settings::Aimbot::weapons[-1].autoShootEnabled;
+						// 	autoScopeEnabled = Settings::Aimbot::weapons[-1].autoScopeEnabled;
+						// 	noShootEnabled = Settings::Aimbot::weapons[-1].noShootEnabled;
+						// 	ignoreJumpEnabled = Settings::Aimbot::weapons[-1].ignoreJumpEnabled;
+						// }
 					}
 				ImGui::PopID();
 			}
