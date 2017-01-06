@@ -251,6 +251,10 @@ namespace Settings
 			float errorMarginValue;
 			bool autoAimEnabled;
 			float autoAimValue;
+			bool autoWallEnabled;
+			float autoWallValue;
+			bool aimStepEnabled;
+			float aimStepValue;
 			bool rcsEnabled;
 			bool rcsAlways_on;
 			float rcsFloat;
@@ -263,7 +267,7 @@ namespace Settings
 			Weapon (int currentWeapon, bool enabled, bool silent, bool friendly, int bone, ButtonCode_t aimkey, bool aimkey_only,
 							bool smoothEnabled, float smoothValue, bool smoothSaltEnabled, float smoothSaltMultiplier,
 							bool errorMarginEnabled, float errorMarginValue,
-							bool autoAimEnabled, float autoAimValue,
+							bool autoAimEnabled, float autoAimValue, bool autoWallEnabled, float autoWallValue, bool aimStepEnabled, float aimStepValue,
 							bool rcsEnabled, bool rcsAlways_on, float rcsFloat,
 							bool autoPistolEnabled, bool autoShootEnabled, bool autoScopeEnabled,
 							bool noShootEnabled, bool ignoreJumpEnabled)
@@ -283,6 +287,10 @@ namespace Settings
 				this->errorMarginValue = errorMarginValue;
 				this->autoAimEnabled = autoAimEnabled;
 				this->autoAimValue = autoAimValue;
+				this->autoWallEnabled = autoWallEnabled;
+				this->autoWallValue = autoWallValue;
+				this->aimStepEnabled = aimStepEnabled;
+				this->aimStepValue = aimStepValue;
 				this->rcsEnabled = rcsEnabled;
 				this->rcsAlways_on = rcsAlways_on;
 				this->rcsFloat = rcsFloat;

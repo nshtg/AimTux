@@ -264,8 +264,32 @@ void AimbotTab()
 {
 	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
 	static int current_weapon = -1;
+	static bool enabled = true;
+	static bool silent = false;
+	static bool friendly = false;
+	static int bone = 8;
+	static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
+	static bool aimkey_only = false;
+	static bool smoothEnabled = false;
+	static float smoothValue = 0.0f;
+	static bool smoothSaltEnabled = false;
+	static float smoothSaltMultiplier = 0.0f;
+	static bool errorMarginEnabled = false;
+	static float errorMarginValue = 0.0f;
+	static bool autoAimEnabled = false;
+	static float autoAimValue = 180.0f;
+	static bool aimStepEnabled = false;
+	static float aimStepValue = 25.0f;
+	static bool rcsEnabled = false;
+	static bool rcsAlways_on = false;
+	static float rcsFloat = 2.0f;
+	static bool autoPistolEnabled = false;
+	static bool autoShootEnabled = false;
+	static bool autoScopeEnabled = false;
+	static bool noShootEnabled = false;
+	static bool ignoreJumpEnabled = false;
 
-	ImGui::Checkbox("Enabled", &Settings::Aimbot::enabled);
+	ImGui::Checkbox("Enabled", &enabled);
 	ImGui::Separator();
 
 	ImGui::Columns(3, NULL, true);
@@ -280,11 +304,34 @@ void AimbotTab()
 					{
 						current_weapon = it.first;
 
-						// auto keyExists = Settings::Skinchanger::skins.find(it.first);
-						// if (keyExists == Settings::Skinchanger::skins.end())
-						// 	current_weapon_skin = -1;
-						// else
-						// 	current_weapon_skin = Settings::Skinchanger::skins[it.first].PaintKit;
+						auto keyExists = Settings::Aimbot::weapons.find(it.first);
+						if (!(keyExists == Settings::Aimbot::weapons.end()))
+						{
+							enabled = Settings::Aimbot::weapons[it.first].enabled;
+							silent = Settings::Aimbot::weapons[it.first].silent;
+							friendly = Settings::Aimbot::weapons[it.first].friendly;
+							bone = Settings::Aimbot::weapons[it.first].bone;
+							aimkey = Settings::Aimbot::weapons[it.first].aimkey;
+							aimkey_only = Settings::Aimbot::weapons[it.first].aimkey_only;
+							smoothEnabled = Settings::Aimbot::weapons[it.first].smoothEnabled;
+							smoothValue = Settings::Aimbot::weapons[it.first].smoothValue;
+							smoothSaltEnabled = Settings::Aimbot::weapons[it.first].smoothSaltEnabled;
+							smoothSaltMultiplier = Settings::Aimbot::weapons[it.first].smoothSaltMultiplier;
+							errorMarginEnabled = Settings::Aimbot::weapons[it.first].errorMarginEnabled;
+							errorMarginValue = Settings::Aimbot::weapons[it.first].errorMarginValue;
+							autoAimEnabled = Settings::Aimbot::weapons[it.first].autoAimEnabled;
+							autoAimValue = Settings::Aimbot::weapons[it.first].autoAimValue;
+							aimStepEnabled = Settings::Aimbot::weapons[it.first].aimStepEnabled;
+							aimStepValue = Settings::Aimbot::weapons[it.first].aimStepValue;
+							rcsEnabled = Settings::Aimbot::weapons[it.first].rcsEnabled;
+							rcsAlways_on = Settings::Aimbot::weapons[it.first].rcsAlways_on;
+							rcsFloat = Settings::Aimbot::weapons[it.first].rcsFloat;
+							autoPistolEnabled = Settings::Aimbot::weapons[it.first].autoPistolEnabled;
+							autoShootEnabled = Settings::Aimbot::weapons[it.first].autoShootEnabled;
+							autoScopeEnabled = Settings::Aimbot::weapons[it.first].autoScopeEnabled;
+							noShootEnabled = Settings::Aimbot::weapons[it.first].noShootEnabled;
+							ignoreJumpEnabled = Settings::Aimbot::weapons[it.first].ignoreJumpEnabled;
+						}
 					}
 				ImGui::PopID();
 			}
@@ -299,14 +346,14 @@ void AimbotTab()
 			ImGui::Separator();
 			ImGui::Columns(2, NULL, true);
 			{
-				ImGui::Checkbox("Friendly", &Settings::Aimbot::friendly);
+				ImGui::Checkbox("Friendly", &friendly);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Whether to target friendlies");
 			}
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-					ImGui::Combo("##AIMTARGET", &Settings::Aimbot::bone, targets, IM_ARRAYSIZE(targets));
+					ImGui::Combo("##AIMTARGET", &bone, targets, IM_ARRAYSIZE(targets));
 				ImGui::PopItemWidth();
 			}
 			ImGui::Columns(1);
@@ -315,21 +362,21 @@ void AimbotTab()
 			ImGui::Separator();
 			ImGui::Columns(2, NULL, true);
 			{
-				ImGui::Checkbox("Auto Aim", &Settings::Aimbot::AutoAim::enabled);
+				ImGui::Checkbox("Auto Aim", &autoAimEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Locks onto enemies within a certain FOV amount");
-				ImGui::Checkbox("Recoil Control", &Settings::Aimbot::RCS::enabled);
+				ImGui::Checkbox("Recoil Control", &rcsEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Automatically controls recoil");
-				ImGui::Checkbox("RCS Always on", &Settings::Aimbot::RCS::always_on);
+				ImGui::Checkbox("RCS Always on", &rcsAlways_on);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Whether Recoil Control always controls recoil (even when not aimbotting)");
 			}
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-					ImGui::SliderFloat("##AA", &Settings::Aimbot::AutoAim::fov, 0, 180);
-					ImGui::SliderFloat("##RCS", &Settings::Aimbot::RCS::value, 0, 2);
+					ImGui::SliderFloat("##AA", &autoAimValue, 0, 180);
+					ImGui::SliderFloat("##RCS", &rcsFloat, 0, 2);
 				ImGui::PopItemWidth();
 			}
 			ImGui::Columns(1);
@@ -338,22 +385,22 @@ void AimbotTab()
 			ImGui::Separator();
 			ImGui::Columns(2, NULL, true);
 			{
-				ImGui::Checkbox("Smoothing", &Settings::Aimbot::Smooth::enabled);
+				ImGui::Checkbox("Smoothing", &smoothEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Smoothing reduces the aimbot \"snap\". 0 for full snap. 1 for full smoothing");
-				ImGui::Checkbox("Smooth Salting", &Settings::Aimbot::Smooth::Salting::enabled);
+				ImGui::Checkbox("Smooth Salting", &smoothSaltEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Breaks the smoothing into smaller steps, high smooth + low salt is slightly stuttery");
-				ImGui::Checkbox("Error Margin", &Settings::Aimbot::ErrorMargin::enabled);
+				ImGui::Checkbox("Error Margin", &errorMarginEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Adds a margin of error to the aim, it will be obvious what it does when using it");
 			}
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-					ImGui::SliderFloat("##SMOOTH", &Settings::Aimbot::Smooth::value, 0, 1);
-					ImGui::SliderFloat("##SALT", &Settings::Aimbot::Smooth::Salting::multiplier, 0, Settings::Aimbot::Smooth::value);
-					ImGui::SliderFloat("##ERROR", &Settings::Aimbot::ErrorMargin::value, 0, 2);
+					ImGui::SliderFloat("##SMOOTH", &smoothValue, 0, 1);
+					ImGui::SliderFloat("##SALT", &smoothSaltMultiplier, 0, smoothValue);
+					ImGui::SliderFloat("##ERROR", &errorMarginValue, 0, 2);
 				ImGui::PopItemWidth();
 			}
 			ImGui::Columns(1);
@@ -369,13 +416,13 @@ void AimbotTab()
 			ImGui::Separator();
 			ImGui::Columns(2, NULL, true);
 			{
-				ImGui::Checkbox("Enabled", &Settings::Aimbot::aimkey_only);
+				ImGui::Checkbox("Enabled", &aimkey_only);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Enabling this means it you need to press a specific key to aimlock");
 			}
 			ImGui::NextColumn();
 			{
-				UI::KeyBindButton(&Settings::Aimbot::aimkey);
+				UI::KeyBindButton(&aimkey);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
@@ -383,14 +430,14 @@ void AimbotTab()
 			ImGui::Separator();
 			ImGui::Columns(2, NULL, true);
 			{
-				ImGui::Checkbox("Aim Step", &Settings::Aimbot::AimStep::enabled);
+				ImGui::Checkbox("Aim Step", &aimStepEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Stops you getting VAC auth kicked in Casual / DM");
 			}
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-					ImGui::SliderFloat("##STEP", &Settings::Aimbot::AimStep::value, 0, 100);
+					ImGui::SliderFloat("##STEP", &aimStepValue, 0, 100);
 				ImGui::PopItemWidth();
 			}
 			ImGui::Columns(1);
@@ -399,25 +446,25 @@ void AimbotTab()
 			ImGui::Separator();
 			ImGui::Columns(2, NULL, true);
 			{
-				ImGui::Checkbox("Auto Pistol", &Settings::Aimbot::AutoPistol::enabled);
+				ImGui::Checkbox("Auto Pistol", &autoPistolEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Automatically shoots the pistol when holding fire");
-				ImGui::Checkbox("Auto Shoot", &Settings::Aimbot::AutoShoot::enabled);
+				ImGui::Checkbox("Auto Shoot", &autoShootEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Automatically shoots when locking to an enemy");
-				ImGui::Checkbox("Silent Aim", &Settings::Aimbot::silent);
+				ImGui::Checkbox("Silent Aim", &silent);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Prevents the camera from locking to an enemy, doesn't work for demos");
 			}
 			ImGui::NextColumn();
 			{
-				ImGui::Checkbox("No Shoot", &Settings::Aimbot::NoShoot::enabled);
+				ImGui::Checkbox("No Shoot", &noShootEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Stops you shooting when locking to an enemy");
-				ImGui::Checkbox("Auto Scope", &Settings::Aimbot::AutoShoot::autoscope);
+				ImGui::Checkbox("Auto Scope", &autoScopeEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Automatically scopes weapons that have them");
-				ImGui::Checkbox("Ignore Jump", &Settings::Aimbot::IgnoreJump::enabled);
+				ImGui::Checkbox("Ignore Jump", &ignoreJumpEnabled);
 				if (ImGui::IsItemHovered())
 					ImGui::SetTooltip("Prevents you from aimbotting while jumping");
 			}
@@ -503,6 +550,10 @@ void TriggerbotTab()
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
+			if (ImGui::Button("Test"))
+			{
+
+			}
 			ImGui::EndChild();
 		}
 	}

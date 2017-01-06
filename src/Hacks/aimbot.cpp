@@ -51,8 +51,8 @@ std::unordered_map<int, std::vector<const char*>> hitboxes = {
 };
 
 std::unordered_map<int, Settings::Aimbot::Weapon> Settings::Aimbot::weapons = {
-		{ WEAPON_AK47, Settings::Aimbot::Weapon(7, true, true, true, 8, ButtonCode_t::KEY_H, false, true, 0.4f, true, 0.5f, true, 0.7f, true, 50.0f, true, false, 1.3f, false, true, false, false, false) },
-		{ WEAPON_AWP, Settings::Aimbot::Weapon(9, true, false, false, 6, ButtonCode_t::MOUSE_MIDDLE, false, false, 0.0f, false, 0.0f, false, 0.0f, true, 180.0f, true, false, 2.0f, false, false, true, false, false) },
+		{ WEAPON_AK47, Settings::Aimbot::Weapon(7, true, true, true, 8, ButtonCode_t::KEY_H, false, true, 0.4f, true, 0.5f, true, 0.7f, true, 50.0f, false, 0.0f, false, 10.0f, true, false, 1.3f, false, true, false, false, false) },
+		{ WEAPON_AWP, Settings::Aimbot::Weapon(9, false, false, false, 6, ButtonCode_t::MOUSE_MIDDLE, false, false, 0.0f, false, 0.0f, false, 0.0f, true, 180.0f, false, 0.0f, false, 10.0f, true, false, 2.0f, false, false, true, false, false) },
 };
 
 static void ApplyErrorToAngle(QAngle* angles, float margin)
