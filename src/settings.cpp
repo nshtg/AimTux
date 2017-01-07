@@ -139,6 +139,39 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings["Aimbot"]["AutoStop"]["enabled"] = Settings::Aimbot::AutoStop::enabled;
 	settings["Aimbot"]["IgnoreJump"]["enabled"] = Settings::Aimbot::IgnoreJump::enabled;
 
+	for (auto i : Settings::Aimbot::weapons)
+	{
+		// TODO this is kind of a hack and i'm too tired to find a better way to do this
+		// yes i tried defining a variable, skinSetting, and giving it the same value but woooooo operator overloading
+		// in C++ and weird shit
+		#define weaponSetting settings["Aimbot"]["weapons"][Util::Items::GetItemName((enum ItemDefinitionIndex) i.first)]
+		weaponSetting["enabled"] = i.second.enabled;
+		weaponSetting["silent"] = i.second.silent;
+		weaponSetting["friendly"] = i.second.friendly;
+		weaponSetting["bone"] = i.second.bone;
+		weaponSetting["aimkey"] = i.second.aimkey;
+		weaponSetting["aimkey_only"] = i.second.aimkey_only;
+		weaponSetting["smoothEnabled"] = i.second.smoothEnabled;
+		weaponSetting["smoothAmount"] = i.second.smoothAmount;
+		weaponSetting["smoothSaltEnabled"] = i.second.smoothSaltEnabled;
+		weaponSetting["smoothSaltMultiplier"] = i.second.smoothSaltMultiplier;
+		weaponSetting["errorMarginEnabled"] = i.second.errorMarginEnabled;
+		weaponSetting["errorMarginValue"] = i.second.errorMarginValue;
+		weaponSetting["autoAimEnabled"] = i.second.autoAimEnabled;
+		weaponSetting["autoAimFov"] = i.second.autoAimFov;
+		weaponSetting["aimStepEnabled"] = i.second.aimStepEnabled;
+		weaponSetting["aimStepAmount"] = i.second.aimStepValue;
+		weaponSetting["rcsEnabled"] = i.second.rcsEnabled;
+		weaponSetting["rcsAlways_on"] = i.second.rcsAlways_on;
+		weaponSetting["rcsAmount"] = i.second.rcsAmount;
+		weaponSetting["autoPistolEnabled"] = i.second.autoPistolEnabled;
+		weaponSetting["autoShootEnabled"] = i.second.autoShootEnabled;
+		weaponSetting["autoScopeEnabled"] = i.second.autoScopeEnabled;
+		weaponSetting["noShootEnabled"] = i.second.noShootEnabled;
+		weaponSetting["ignoreJumpEnabled"] = i.second.ignoreJumpEnabled;
+		#undef weaponSetting
+	}
+
 	settings["Resolver"]["resolve_all"] = Settings::Resolver::resolve_all;
 
 	settings["Triggerbot"]["enabled"] = Settings::Triggerbot::enabled;
@@ -401,6 +434,56 @@ void Settings::LoadConfig(std::string path)
 	GetBool(settings["Aimbot"]["AutoCrouch"]["enabled"], &Settings::Aimbot::AutoCrouch::enabled);
 	GetBool(settings["Aimbot"]["AutoStop"]["enabled"], &Settings::Aimbot::AutoStop::enabled);
 	GetBool(settings["Aimbot"]["IgnoreJump"]["enabled"], &Settings::Aimbot::IgnoreJump::enabled);
+
+	for (Json::ValueIterator itr = settings["Aimbot"]["weapons"].begin(); itr != settings["Aimbot"]["weapons"].end(); itr++)
+	{
+		std::string weaponDataKey = itr.key().asString();
+		auto weaponSetting = settings["Aimbot"]["weapons"][weaponDataKey];
+
+		// XXX Using exception handling to deal with this is stupid, but I don't care to find a better solution
+		// XXX We can't use GetOrdinal() since the key type is a string...
+		int weaponID;
+		try
+		{
+			weaponID = std::stoi(weaponDataKey);
+		}
+		catch (std::invalid_argument) // Not a number
+		{
+			weaponID = Util::Items::GetItemIndex(weaponDataKey);
+		}
+
+		enum ButtonCode_t aimkey;
+		GetOrdinal<enum ButtonCode_t, Util::GetButtonCode>(weaponSetting["aimkey"], &aimkey);
+
+		Settings::Aimbot::Weapon weapon = Settings::Aimbot::Weapon(
+			weaponSetting["enabled"].asBool(),
+			weaponSetting["silent"].asBool(),
+			weaponSetting["friendly"].asBool(),
+			weaponSetting["bone"].asInt(),
+			aimkey,
+			weaponSetting["aimkey_only"].asBool(),
+			weaponSetting["smoothEnabled"].asBool(),
+			weaponSetting["smoothAmount"].asFloat(),
+			weaponSetting["smoothSaltEnabled"].asBool(),
+			weaponSetting["smoothSaltMultiplier"].asFloat(),
+			weaponSetting["errorMarginEnabled"].asBool(),
+			weaponSetting["errorMarginValue"].asFloat(),
+			weaponSetting["autoAimEnabled"].asBool(),
+			weaponSetting["autoAimFov"].asFloat(),
+			weaponSetting["aimStepEnabled"].asBool(),
+			weaponSetting["aimStepAmount"].asFloat(),
+			weaponSetting["rcsEnabled"].asBool(),
+			weaponSetting["rcsAlways_on"].asBool(),
+			weaponSetting["rcsAmount"].asFloat(),
+			weaponSetting["autoPistolEnabled"].asBool(),
+			weaponSetting["autoShootEnabled"].asBool(),
+			weaponSetting["autoScopeEnabled"].asBool(),
+			weaponSetting["noShootEnabled"].asBool(),
+			weaponSetting["ignoreJumpEnabled"].asBool()
+		);
+
+		Settings::Aimbot::weapons[weaponID] = weapon;
+	}
 
 	GetBool(settings["Resolver"]["resolve_all"], &Settings::Resolver::resolve_all);
 
