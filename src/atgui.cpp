@@ -520,10 +520,6 @@ void AimbotTab()
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
-			if (ImGui::Button("Test"))
-			{
-				Settings::Aimbot::weapons[current_weapon] = Settings::Aimbot::Weapon(enabled, silent, friendly, bone, aimkey, aimkey_only, smoothEnabled, smoothValue, smoothSaltEnabled, smoothSaltMultiplier, errorMarginEnabled, errorMarginValue, autoAimEnabled, autoAimValue, aimStepEnabled, aimStepValue, rcsEnabled, rcsAlways_on, rcsFloat, autoPistolEnabled, autoShootEnabled, autoScopeEnabled, noShootEnabled, ignoreJumpEnabled);
-			}
 			ImGui::EndChild();
 		}
 	}
